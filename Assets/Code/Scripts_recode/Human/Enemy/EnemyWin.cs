@@ -15,7 +15,6 @@ public class EnemyWin : PlayerWin
 
     public override void Win(Transform target, int top)
     {
-        Debug.Log(gameObject.name);
         _navMeshAgent.enabled=false;
         StartCoroutine(ToTarget(target));
         GetComponent<StateController>().State = (int) EnemyState.Win;

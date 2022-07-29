@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Level/Scenes/CreateScene/ScreativeScene.unity
+    path: Assets/Level/Scenes/CreateScene/Kong Island.unity
     guid: 4114837e61eef4542b66ceb89a9633dc
   m_configObjects: {}

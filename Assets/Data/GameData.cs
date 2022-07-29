@@ -8,7 +8,6 @@ using UnityEngine.Events;
 public class GameData : ScripableSingletonInterface<GameData>
 {
     [SerializeField] private string _playerName;
-
     public string PlayerName
     {
         get
@@ -24,6 +23,23 @@ public class GameData : ScripableSingletonInterface<GameData>
             }
         }
     }
-
     public UnityEvent<string> OnChangeNameEvent = new UnityEvent<string>();
+
+
+    [SerializeField] private int _currentlevel = 0;
+
+    public int CurrentLevel
+    {
+        get
+        {
+            return _currentlevel;
+        }
+        set
+        {
+            if (value != _currentlevel)
+            {
+                _currentlevel = value;
+            }
+        }
+    }
 }
