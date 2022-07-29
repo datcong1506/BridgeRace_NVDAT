@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class NewStageDetech : MonoBehaviour
 {
@@ -16,4 +17,6 @@ public class NewStageDetech : MonoBehaviour
             controller.State = (int) EnemyState.CollectBrick;
         }
     }
+
+   
 }

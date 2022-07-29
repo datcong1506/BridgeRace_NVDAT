@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerIteract : MonoBehaviour
 {
-    private StateController _stateController;
+    protected StateController _stateController;
     [SerializeField] protected StackController _stackController;
     [SerializeField] private CharacterController _characterController;
     private void Start()
@@ -60,7 +60,13 @@ public class PlayerIteract : MonoBehaviour
         return _stateController.State == (int) PlayerState.Movement;
     }
     
-    
+    public void OnChangeState(int oldState, int newState)
+    {
+        if (newState == (int) PlayerState.Fall)
+        {
+            _stackController.Drop();
+        }
+    }
     protected void OnTriggerEnter(Collider other)
     {
         if (Iteract())

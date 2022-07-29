@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class EnemyCollectBrick : MonoBehaviour
 {
@@ -13,10 +14,14 @@ public class EnemyCollectBrick : MonoBehaviour
     private int MinNumBrick;
     [SerializeField] private int MaxNumBrick;
     private int TargetNumBrick;
-    
+    [SerializeField] private GameObject _detechBrick;
     
     public StageSpawnBrickSystem CurrentStage;
 
+    private Vector3 stairPosision;
+
+    //test
+   
 
     public void AddTarget(Transform newBrick)
     {
@@ -56,23 +61,36 @@ public class EnemyCollectBrick : MonoBehaviour
     }
 
 
-    public void OnChangeState(int oldState,int newState)
+    public void OnEnterNewStage()
     {
-        if (newState == (int) EnemyState.GotoStair)
-        {
-            CurrentBricks.Clear();
-            var target=CurrentStage.GetRandomStair();
-            _enemyMovement.MoveToTarget(target);
-        }
         
     }
 
-    private void GoToStair()
+    public void OnChangeState(int oldState,int newState)
     {
-        if (_stateController.State == (int) EnemyState.GotoStair)
+        var nState = (EnemyState) newState;
+
+        switch (nState)
         {
+            case EnemyState.GotoStair:
+                CurrentBricks.Clear();
+                var target=CurrentStage.GetRandomStair();
+                _enemyMovement.MoveToTarget(target);
+                _detechBrick.gameObject.SetActive(false);
+                break;
+            case EnemyState.Fall:
+                _stackController.Drop();
+                break;
+            case EnemyState.CollectBrick:
+                _detechBrick.gameObject.SetActive(true);
+
+                break;
+            default:
+                break;
         }
-    } 
+    }
+
+
     
 
     private void CollectBrick()
@@ -86,6 +104,7 @@ public class EnemyCollectBrick : MonoBehaviour
 
                     // this can op(optimize)
                     // find nearest
+                    
                     var nearest=CurrentBricks[0];
 
                     for (int i = 1; i < CurrentBricks.Count; i++)
@@ -98,7 +117,25 @@ public class EnemyCollectBrick : MonoBehaviour
                             nearest = CurrentBricks[i];
                         }
                     }
+                    
+                    var directodis = nearest.position - transform.position;
+                    directodis.y = 0;
+                    if (directodis.magnitude < 0.1f)
+                    {
+                        RemoveTarget(nearest);
+                    }
 
+                    if (nearest.TryGetComponent<BrickController>(out var controller))
+                    {
+                        if (controller._owner != null && controller._owner != gameObject)
+                        {
+                            RemoveTarget(controller.transform);
+                            return;
+                        }
+                    }
+                    
+                    
+                    
                     if (TargetNumBrick <= 0)
                     {
 
@@ -126,13 +163,15 @@ public class EnemyCollectBrick : MonoBehaviour
                     {
                         // go to stair
                         _enemyMovement.MoveToTarget(CurrentStage.GetRandomStair());
-
+                        _stateController.State = (int) EnemyState.GotoStair;
                     }
                     else
                     {
                         // to a random posisison
                         _enemyMovement.MoveToTarget(CurrentStage.GetRandomPosisionOnMesh());
-                        
+                        /*
+                        Debug.Log("ao");
+                    */
                     }
                 }
             }
@@ -143,6 +182,9 @@ public class EnemyCollectBrick : MonoBehaviour
     private void Update()
     {
         CollectBrick();
+        
+        //test
+
     }
 
 }

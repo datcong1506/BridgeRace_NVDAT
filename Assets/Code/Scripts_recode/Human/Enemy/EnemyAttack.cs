@@ -9,6 +9,7 @@ public class EnemyAttack : PlayerAttack
         if (_stackController.StackCount < stackCount)
         {
             _stateController.State = (int) EnemyState.Fall;
+            
         }
     }
 }

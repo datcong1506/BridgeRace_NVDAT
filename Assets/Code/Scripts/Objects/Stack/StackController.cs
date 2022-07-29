@@ -42,18 +42,13 @@ public class StackController : MonoBehaviour
         onAddStackEvent?.Invoke();
     }
 
-    public void OnChangeState(int oldState, int newState)
-    {
-        if (newState == (int) PlayerState.Fall)
-        {
-            Drop();
-        }
-    }
+    
 
     public void Drop()
     {
-        foreach (var st in stacks)
+        for (int i = 0; i < StackCount; i++)
         {
+            var st = stacks[i];
             var ctl = st.GetComponent<BrickController>();
             ctl.OnDrop();
         }

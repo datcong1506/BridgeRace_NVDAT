@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Redcode.Paths;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BrickController : MonoBehaviour,IBetakeable
@@ -20,7 +21,7 @@ public class BrickController : MonoBehaviour,IBetakeable
         set
         {
             _material = value;
-            GetComponent<MeshRenderer>().material = _material;
+            GetComponent<MeshRenderer>().sharedMaterial = _material;
         }
     }
     private StageSpawnBrickSystem _stageSpawnBrickSystem;
@@ -35,7 +36,21 @@ public class BrickController : MonoBehaviour,IBetakeable
     private float startDistance;
     private bool doneJob=true;
 
-    
+
+    private bool isGrounded;
+
+    public void OnGround()
+    {
+        isGrounded = true;
+    }
+
+
+    private void OnDisable()
+    {
+        isGrounded = false;
+        doneJob = true;
+    }
+
     public void SetTarget(Transform stackController,Vector3 targetLocalPosision,Vector3 p_middleTarget)
     {
         _path = PathPollingSystem.Singleton.PathPolling.Instantiate().GetComponent<Path>();
@@ -43,12 +58,13 @@ public class BrickController : MonoBehaviour,IBetakeable
         TargetLocalPosision = targetLocalPosision;
         middleTarget = p_middleTarget;
         
+        transform.SetParent(stackController);
         
         _path.SetPoint(0,_transform.position,_transform.rotation,true);
         _path.SetPoint(1,middleTarget+Vector3.Lerp(transform.position,stackControllerTransform.position,0.5f),Quaternion.Lerp(_transform.rotation,stackControllerTransform.rotation,0.5f),true);
         
         startDistance = 0;
-                doneJob = false;
+        doneJob = false;
 
     }
     public void MoveToTarget()
@@ -60,7 +76,6 @@ public class BrickController : MonoBehaviour,IBetakeable
         {
             startDistance = 1;
             doneJob=true;
-            _transform.SetParent(stackControllerTransform);
             _path.gameObject.SetActive(false);
         }
         if (startDistance <= 1)
@@ -74,8 +89,8 @@ public class BrickController : MonoBehaviour,IBetakeable
     {
         _transform = transform;
     }
-
-    private void Update()
+    
+    private void LateUpdate()
     {
         MoveToTarget();
     }
@@ -84,22 +99,36 @@ public class BrickController : MonoBehaviour,IBetakeable
     {
         StartCoroutine(Delay(OnSpawn));
     }
-
-    private void OnDisable()
-    {
-    }
-
+    
     public void OnBetake(GameObject from,StackController stackController)
     {
+        if (transform.localPosition != Vector3.zero)
+        {
+            transform.localPosition=Vector3.zero;
+            return;
+        }
         
+        
+        if (!isGrounded) return;
         if (_owner == from)
         {
+           
+            var parent = transform.parent;
+            transform.SetParent(null);
+            parent.gameObject.SetActive(false);
+        
             SetTarget(stackController.transform,stackController.GetNextLPosision(),Vector3.zero);
             GetComponent<SphereCollider>().enabled = false;
             stackController.AddStack(gameObject);
+            Material.SetColor("_MainColor", _owner.GetComponent<HumanSkinComponent>().Material.GetColor("_MainColor"));
+         
         }
         if (_owner == null)
         {
+            var parent = transform.parent;
+            transform.SetParent(null);
+            parent.gameObject.SetActive(false);
+            
             _owner=from;
             SetTarget(stackController.transform,stackController.GetNextLPosision(),Vector3.zero);
             GetComponent<SphereCollider>().enabled = false;
@@ -107,23 +136,24 @@ public class BrickController : MonoBehaviour,IBetakeable
             Material.SetColor("_MainColor", _owner.GetComponent<HumanSkinComponent>().Material.GetColor("_MainColor"));
 
         }
+        
     }
     
     public void OnDrop(){
-        _stageSpawnBrickSystem.Recycle(keyIndexInMesh);
-        GetComponent<SphereCollider>().enabled = true;
         transform.SetParent(null);
-        transform.rotation=Quaternion.Euler(-90,0,0);
         var brickPhysicContain=BrickPhysicPollingSystem.Singleton.PhyssicBrickPolling.Instantiate(transform.position,transform.rotation);
         var brickPhysicController =brickPhysicContain.GetComponent<BrickPhysicController>();
         brickPhysicController.OnAddPhysic(transform);
         Material.SetColor("_MainColor",_dropColor);
         _owner = null;
+        
     }
     
+   
     public void Recycle(){
+        GetComponent<SphereCollider>().enabled = false;
         _stageSpawnBrickSystem.Recycle(keyIndexInMesh);
-        GetComponent<SphereCollider>().enabled = true;
+        transform.position = Vector3.down * 100;
         transform.SetParent(null);
         gameObject.SetActive(false);
     }
@@ -144,22 +174,16 @@ public class BrickController : MonoBehaviour,IBetakeable
             var brickPhysicContain=BrickPhysicPollingSystem.Singleton.PhyssicBrickPolling.Instantiate(transform.position,transform.rotation);
             var brickPhysicController =brickPhysicContain.GetComponent<BrickPhysicController>();
             brickPhysicController.OnAdd(transform);
+            /*
+            transform.SetParent(brickPhysicController.transform);
+            */
             Material.SetColor("_MainColor", _owner.GetComponent<HumanSkinComponent>().Material.GetColor("_MainColor"));
         }
     }
     
     IEnumerator Delay(Action f)
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForNextFrameUnit();
         f();
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        
-    }
-
-
-
-    
+    }    
 }

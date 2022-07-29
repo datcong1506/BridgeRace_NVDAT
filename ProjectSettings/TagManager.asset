@@ -17,12 +17,12 @@ TagManager:
   - Ground
   - 
   - 
+  - EnemySence
+  - StageScene
   - 
+  - PhysicBrick
   - 
-  - 
-  - 
-  - 
-  - 
+  - Wall
   - 
   - 
   - 

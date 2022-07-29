@@ -13,7 +13,9 @@ public class PlayerAnimationController : MonoBehaviour
     [SerializeField] protected string IdleTypeParam;
     [SerializeField] protected string SpeedParam;
     [SerializeField] protected string ToFallParam;
+    [SerializeField] protected string DanceTypeParam="DanceType";
 
+    [SerializeField] protected string ToDanceParam = "ToDance";
     [SerializeField] private PlayerMovement _playerMovement;
 
 
@@ -45,8 +47,10 @@ public class PlayerAnimationController : MonoBehaviour
             _animator.SetTrigger(ToMoveMentParam);
         }
         
-        if (newState == MovementState)
+        if (newState == WinState)
         {
+            _animator.SetTrigger(ToDanceParam);
+            _animator.SetFloat(DanceTypeParam,UnityEngine.Random.Range(0,8));
         }
     }
 

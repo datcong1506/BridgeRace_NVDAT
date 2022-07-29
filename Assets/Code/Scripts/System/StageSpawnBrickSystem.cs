@@ -45,13 +45,11 @@ public class StageSpawnBrickSystem : MonoBehaviour
 
         MeshFilter.sharedMesh = Instantiate(mesh);
         
-        Debug.Log(transform.TransformPoint(MeshFilter.sharedMesh.vertices[0]));
         // subdivision mesh
         for (int i = 0; i < SubDivideTimes; i++)
         {
             MeshHelper.Subdivide(MeshFilter.sharedMesh);
         }
-        Debug.Log(gameObject.name);
 
         // vertex count
         var verticlesCount = MeshFilter.sharedMesh.vertexCount;
@@ -74,12 +72,9 @@ public class StageSpawnBrickSystem : MonoBehaviour
             var skinComponent = enemyGO.GetComponent<HumanSkinComponent>();
             var brickPooling = new ObjectPooling(enemyGO, Brick, verticlesCount);
             
-            
             pollBricks.Add(enemyGO,brickPooling);
             
-            /*var simplepoolCpn = enemyGO.GetComponent<SimpleObjectpollingComponent>(); // Cpn : component
-            simplepoolCpn.Value.Add(brickPooling);*/
-
+    
 
             List<GameObject> diasableAfterDone = new List<GameObject>();
             // setMaterial inherit from the owner
@@ -88,10 +83,9 @@ public class StageSpawnBrickSystem : MonoBehaviour
                 var instantiate= brickPooling.Instantiate();
 
                 var brickStatComponent = instantiate.GetComponent<BrickController>();
-                Material material;
 
                 
-                material = new Material(Brick.GetComponent<MeshRenderer>().sharedMaterial);
+                var material = new Material(Brick.GetComponent<MeshRenderer>().sharedMaterial);
                 material.SetColor("_MainColor",skinComponent.Material.GetColor("_MainColor"));
 
                 brickStatComponent.Initial(this,enemyGO,material);
@@ -104,6 +98,10 @@ public class StageSpawnBrickSystem : MonoBehaviour
             }
         }
         FirstSpawn();
+    }
+
+    private void OnEnable()
+    {
     }
 
     /*private void Update()
@@ -155,7 +153,7 @@ public class StageSpawnBrickSystem : MonoBehaviour
                 {
                     if (TryUseRandomPointInMesh(out var v))
                     {
-                        var newInstance = simplePoll.Instantiate();
+                        var newInstance = simplePoll.Instantiate(GetPosisionByKeyIndex(v.Key),Quaternion.identity);
                         var brickStat= newInstance.GetComponent<BrickController>();
                         brickStat.keyIndexInMesh = v.Key;
                     }

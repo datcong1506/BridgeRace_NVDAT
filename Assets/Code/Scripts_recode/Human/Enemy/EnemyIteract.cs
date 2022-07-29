@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyIteract : PlayerIteract
 {
-    [SerializeField] private StateController _stateController;
     [SerializeField] private EnemyCollectBrick _enemyCollectBrick;
     public override bool Iteract()
     {

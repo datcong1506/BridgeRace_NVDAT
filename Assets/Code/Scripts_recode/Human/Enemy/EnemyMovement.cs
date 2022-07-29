@@ -14,14 +14,24 @@ public class EnemyMovement:MonoBehaviour
 
     public void MoveToTarget(Vector3 target)
     {
-        _agent.SetDestination(target);
+        if (_agent.enabled)
+        {
+            _agent.isStopped = false;
+            _agent.SetDestination(target);
+        }
     }
 
     public void OnChangeState(int oldState, int newState)
     {
-        if (newState == (int) EnemyState.Fall)
+
+        var newStateEnum = (EnemyState) newState;
+
+        switch (newStateEnum)
         {
-            _agent.isStopped = true;
+            case EnemyState.Fall:
+                _agent.isStopped = true;
+                break;
         }
+  
     }
 }

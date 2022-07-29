@@ -11,17 +11,17 @@ NavMeshProjectSettings:
     cost: 1
   - name: Jump
     cost: 2
-  - name: All
+  - name: 
     cost: 1
-  - name: MainPlayer
+  - name: 
     cost: 1
-  - name: Enemy1
+  - name: 
     cost: 1
-  - name: Enemy2
+  - name: 
     cost: 1
-  - name: Enemy3
+  - name: 
     cost: 1
-  - name: Enemy4
+  - name: 
     cost: 1
   - name: 
     cost: 1

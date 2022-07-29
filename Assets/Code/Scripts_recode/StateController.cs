@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class StateController : MonoBehaviour
 {
-    private int _state;
+    [SerializeField]private int _state;
 
     public int State
     {
@@ -27,3 +27,4 @@ public class StateController : MonoBehaviour
 
     public UnityEvent<int, int> OnChangeState;
 }
+
