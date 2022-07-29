@@ -7,8 +7,7 @@ using UnityEngine;
 public class BrickPhysicController : MonoBehaviour
 {
 
-    [SerializeField] private LayerMask _groundMask;
-    
+    private String _groundTag = "Ground";
     public void OnAdd(Transform brick)
     {
         transform.position = brick.position;
@@ -55,25 +54,16 @@ public class BrickPhysicController : MonoBehaviour
     
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag(_groundTag))
         {
             for (int i = 0; i < transform.childCount; i++)
             {
-                StartCoroutine(DelayOneFarme(() =>
-                {
-                    transform.GetChild(i).localPosition = Vector3.zero;
-                    transform.GetChild(i).GetComponent<SphereCollider>().enabled = true;
-                    transform.GetChild(i).GetComponent<BrickController>().OnGround();
-                }));
-                
+                transform.GetChild(i).GetComponent<SphereCollider>().enabled = true;
+                transform.GetChild(i).GetComponent<BrickController>().OnGrounded();
                 break;
             }
         }
     }
 
-    IEnumerator DelayOneFarme(Action f)
-    {
-        yield return  new WaitForFixedUpdate();
-        f();
-    }
+  
 }

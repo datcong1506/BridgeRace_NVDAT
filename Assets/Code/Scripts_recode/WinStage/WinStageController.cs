@@ -43,6 +43,10 @@ public class WinStageController : MonobehaviourSingletonInterface<WinStageContro
             {
                 win2.Win(_top2,2);
             }
+            if (sortByDistance.ElementAt(2).TryGetComponent<IWinable>(out var win3))
+            {
+                win3.Win(_top3,2);
+            }
 
             GameManager.Singleton.State = (int) GameState.End;
             _winEffect.SetActive(true);

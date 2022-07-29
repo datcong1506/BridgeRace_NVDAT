@@ -11,5 +11,8 @@ public class HumanSkinComponent : MonoBehaviour
     public Material Material;
 
 
-    
+    private void Start()
+    {
+       
+    }
 }

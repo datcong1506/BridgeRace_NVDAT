@@ -37,17 +37,11 @@ public class BrickController : MonoBehaviour,IBetakeable
     private bool doneJob=true;
 
 
-    private bool isGrounded;
-
-    public void OnGround()
-    {
-        isGrounded = true;
-    }
 
 
+   
     private void OnDisable()
     {
-        isGrounded = false;
         doneJob = true;
     }
 
@@ -102,40 +96,30 @@ public class BrickController : MonoBehaviour,IBetakeable
     
     public void OnBetake(GameObject from,StackController stackController)
     {
-        if (transform.localPosition != Vector3.zero)
+        if (_owner == from||_owner==null)
         {
-            transform.localPosition=Vector3.zero;
-            return;
-        }
-        
-        
-        if (!isGrounded) return;
-        if (_owner == from)
-        {
-           
             var parent = transform.parent;
             transform.SetParent(null);
             parent.gameObject.SetActive(false);
-        
+            _owner=from;
             SetTarget(stackController.transform,stackController.GetNextLPosision(),Vector3.zero);
             GetComponent<SphereCollider>().enabled = false;
             stackController.AddStack(gameObject);
             Material.SetColor("_MainColor", _owner.GetComponent<HumanSkinComponent>().Material.GetColor("_MainColor"));
          
         }
-        if (_owner == null)
+        /*if (_owner == null)
         {
             var parent = transform.parent;
             transform.SetParent(null);
             parent.gameObject.SetActive(false);
             
-            _owner=from;
             SetTarget(stackController.transform,stackController.GetNextLPosision(),Vector3.zero);
             GetComponent<SphereCollider>().enabled = false;
             stackController.AddStack(gameObject);
             Material.SetColor("_MainColor", _owner.GetComponent<HumanSkinComponent>().Material.GetColor("_MainColor"));
 
-        }
+        }*/
         
     }
     
@@ -148,7 +132,11 @@ public class BrickController : MonoBehaviour,IBetakeable
         _owner = null;
         
     }
-    
+
+    public void OnGrounded()
+    {
+        GetComponent<SphereCollider>().enabled = true;
+    }
    
     public void Recycle(){
         GetComponent<SphereCollider>().enabled = false;
