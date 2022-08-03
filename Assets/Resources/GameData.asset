@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18ec68641eabd514185a72b724e421e7, type: 3}
   m_Name: GameData
   m_EditorClassIdentifier: 
-  _playerName: Dat Cong
+  _playerName: tom
   OnChangeNameEvent:
     m_PersistentCalls:
       m_Calls:
@@ -28,3 +28,4 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _currentlevel: 0

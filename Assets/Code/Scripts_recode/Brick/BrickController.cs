@@ -11,7 +11,6 @@ public class BrickController : MonoBehaviour,IBetakeable
     public GameObject _owner;
     private Material _material;
     [SerializeField] private Color _dropColor;
-    [HideInInspector]
     public Material Material
     {
         get
@@ -24,7 +23,7 @@ public class BrickController : MonoBehaviour,IBetakeable
             GetComponent<MeshRenderer>().sharedMaterial = _material;
         }
     }
-    private StageSpawnBrickSystem _stageSpawnBrickSystem;
+    public StageSpawnBrickSystem _stageSpawnBrickSystem;
     public int keyIndexInMesh;
     
     
@@ -106,21 +105,12 @@ public class BrickController : MonoBehaviour,IBetakeable
             GetComponent<SphereCollider>().enabled = false;
             stackController.AddStack(gameObject);
             Material.SetColor("_MainColor", _owner.GetComponent<HumanSkinComponent>().Material.GetColor("_MainColor"));
-         
+            if (keyIndexInMesh != -1)
+            {
+                _stageSpawnBrickSystem.Recycle(keyIndexInMesh);
+            }
+            keyIndexInMesh = -1;
         }
-        /*if (_owner == null)
-        {
-            var parent = transform.parent;
-            transform.SetParent(null);
-            parent.gameObject.SetActive(false);
-            
-            SetTarget(stackController.transform,stackController.GetNextLPosision(),Vector3.zero);
-            GetComponent<SphereCollider>().enabled = false;
-            stackController.AddStack(gameObject);
-            Material.SetColor("_MainColor", _owner.GetComponent<HumanSkinComponent>().Material.GetColor("_MainColor"));
-
-        }*/
-        
     }
     
     public void OnDrop(){
@@ -140,7 +130,6 @@ public class BrickController : MonoBehaviour,IBetakeable
    
     public void Recycle(){
         GetComponent<SphereCollider>().enabled = false;
-        _stageSpawnBrickSystem.Recycle(keyIndexInMesh);
         transform.position = Vector3.down * 100;
         transform.SetParent(null);
         gameObject.SetActive(false);
@@ -162,9 +151,6 @@ public class BrickController : MonoBehaviour,IBetakeable
             var brickPhysicContain=BrickPhysicPollingSystem.Singleton.PhyssicBrickPolling.Instantiate(transform.position,transform.rotation);
             var brickPhysicController =brickPhysicContain.GetComponent<BrickPhysicController>();
             brickPhysicController.OnAdd(transform);
-            /*
-            transform.SetParent(brickPhysicController.transform);
-            */
             Material.SetColor("_MainColor", _owner.GetComponent<HumanSkinComponent>().Material.GetColor("_MainColor"));
         }
     }

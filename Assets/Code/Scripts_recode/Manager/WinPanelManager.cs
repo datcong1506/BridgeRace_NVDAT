@@ -10,6 +10,10 @@ public class WinPanelManager : MonobehaviourSingletonInterface<WinPanelManager>
 {
     [SerializeField] private TextMeshProUGUI _buttonText;
     [SerializeField] private Button endTriggerButton;
+
+
+   
+    
     
     private void OnEnable()
     {
@@ -26,11 +30,13 @@ public class WinPanelManager : MonobehaviourSingletonInterface<WinPanelManager>
         }
         else
         {
-            _buttonText.text = SceneManager.GetSceneByBuildIndex(sceneBuildIndex + 1).name;
-            var nexxtBuildIndex = sceneBuildIndex + 1;
+            string pathToScene = SceneUtility.GetScenePathByBuildIndex(sceneBuildIndex+1);
+            string nextLevelName = System.IO.Path.GetFileNameWithoutExtension(pathToScene);
+            _buttonText.text = nextLevelName;
+            var nextBuildIndex = sceneBuildIndex + 1;
             endTriggerButton.onClick.AddListener(() =>
             {
-                SceneManager.LoadScene(nexxtBuildIndex);
+                SceneManager.LoadScene(nextBuildIndex);
             });
         }
     }

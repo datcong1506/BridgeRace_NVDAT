@@ -7,6 +7,7 @@ public class PlayerWin : MonoBehaviour,IWinable
     private Transform _target;
     public virtual void Win(Transform target, int top)
     {
+        FinishLevelUIManager.Singleton.OnEnd(top);
         _target = target;
         StartCoroutine(ToTarget(target));
         GetComponent<StateController>().State = (int) PlayerState.Win;

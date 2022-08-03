@@ -12,7 +12,7 @@ public class MonobehaviourSingletonInterface<T> : MonoBehaviour where T : Monobe
         {
             if (singleton == null)
             {
-                singleton=GameObject.FindObjectOfType<T>();
+                singleton = FindObjectOfType<T>();
             }
             return singleton;
         }
@@ -25,7 +25,10 @@ public class MonobehaviourSingletonInterface<T> : MonoBehaviour where T : Monobe
         }
         else
         {
-            Destroy(gameObject);
+            if (singleton != this)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 }

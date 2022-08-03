@@ -50,8 +50,17 @@ public class StackController : MonoBehaviour
         {
             var st = stacks[i];
             var ctl = st.GetComponent<BrickController>();
+            ctl._stageSpawnBrickSystem.ReSpawn(ctl._owner);
+            break;
+        }
+        for (int i = 0; i < StackCount; i++)
+        {
+            var st = stacks[i];
+            var ctl = st.GetComponent<BrickController>();
             ctl.OnDrop();
         }
+
+        
         stacks.Clear();
     }
     

@@ -38,18 +38,8 @@ public class BrickPhysicController : MonoBehaviour
 
     public void OnAddPhysic(Transform brick)
     {
-        GetComponent<Rigidbody>().velocity = UnityEngine.Random.insideUnitSphere*3f;
-
         OnAdd(brick);
-        
-        /*transform.position = brick.position;
-        transform.rotation = brick.rotation;
-        brick.SetParent(transform);
-        
-        
-        // add force 
-        brick.localPosition=Vector3.zero;
-        brick.localRotation=Quaternion.identity;*/
+        GetComponent<Rigidbody>().velocity = UnityEngine.Random.insideUnitSphere*3f;
     }
     
     private void OnCollisionEnter(Collision collision)

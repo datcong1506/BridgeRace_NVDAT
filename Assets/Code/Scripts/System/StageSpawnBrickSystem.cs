@@ -10,47 +10,35 @@ public class StageSpawnBrickSystem : MonoBehaviour
 {
 
     [SerializeField] private Transform[] Stairs;
-    
-    
     public GameObject Brick;
     public MeshFilter MeshFilter;
     [Range(0,3)]
     public int SubDivideTimes;
     private Dictionary<int, byte> freeVerPoint;
     private int vertexCount;
-
-
-
     public Dictionary<GameObject, ObjectPooling> pollBricks;
     private void Awake()
     {
         freeVerPoint = new Dictionary<int, byte>();
         pollBricks = new Dictionary<GameObject, ObjectPooling>();
     }
-
     public Vector3 GetRandomPosisionOnMesh()
     {
         return transform.TransformPoint(MeshFilter.sharedMesh.vertices[UnityEngine.Random.Range(0, vertexCount)]);
     }
-
     public Vector3 GetRandomStair()
     {
         return Stairs[UnityEngine.Random.Range(0, Stairs.Length)].position;
     }
-
     private void Start()
     {
         var mesh = MeshFilter.sharedMesh;
-        
-
         MeshFilter.sharedMesh = Instantiate(mesh);
-        
         // subdivision mesh
         for (int i = 0; i < SubDivideTimes; i++)
         {
             MeshHelper.Subdivide(MeshFilter.sharedMesh);
         }
-
         // vertex count
         var verticlesCount = MeshFilter.sharedMesh.vertexCount;
         vertexCount = verticlesCount;
@@ -59,35 +47,23 @@ public class StageSpawnBrickSystem : MonoBehaviour
         {
             freeVerPoint.Add(i,0);
         }
-
-        
         // player + enemy
         var totalHuman = LevelSystem.Singleton.Enemy.Length;
         var countPerHuman =(int)(verticlesCount / totalHuman);
-        
-        
         for (int i = 0; i < LevelSystem.Singleton.Enemy.Length; i++)
         {
             var enemyGO = LevelSystem.Singleton.Enemy[i];
             var skinComponent = enemyGO.GetComponent<HumanSkinComponent>();
             var brickPooling = new ObjectPooling(enemyGO, Brick, verticlesCount);
-            
             pollBricks.Add(enemyGO,brickPooling);
-            
-    
-
             List<GameObject> diasableAfterDone = new List<GameObject>();
             // setMaterial inherit from the owner
             for (int j = 0; j < verticlesCount; j++)
             {
                 var instantiate= brickPooling.Instantiate();
-
                 var brickStatComponent = instantiate.GetComponent<BrickController>();
-
-                
                 var material = new Material(Brick.GetComponent<MeshRenderer>().sharedMaterial);
                 material.SetColor("_MainColor",skinComponent.Material.GetColor("_MainColor"));
-
                 brickStatComponent.Initial(this,enemyGO,material);
                 diasableAfterDone.Add(instantiate);
             }
@@ -99,29 +75,15 @@ public class StageSpawnBrickSystem : MonoBehaviour
         }
         FirstSpawn();
     }
-
-    private void OnEnable()
-    {
-    }
-
-    /*private void Update()
-    {
-        Debug.Log(freeVerPoint.Count);
-    }*/
-
     private void FirstSpawn(){
         var totalHuman = LevelSystem.Singleton.Enemy.Length;
         var verticlesCount = MeshFilter.mesh.vertexCount;
         var countPerHuman =(int)(verticlesCount / totalHuman);
-
-
         for (int i = 0; i < totalHuman; i++)
         {
             var go = LevelSystem.Singleton.Enemy[i];
             var simplePoll = pollBricks[go];
-            
-         
-                for (int  j= 0; j < countPerHuman; j++)
+            for (int  j= 0; j < countPerHuman; j++)
                 {
                     if (TryUseRandomPointInMesh(out var v))
                     {
@@ -130,8 +92,6 @@ public class StageSpawnBrickSystem : MonoBehaviour
                         brickStat.keyIndexInMesh = v.Key;
                     }
                 }
-            
-            
         }
     }
 
@@ -144,22 +104,27 @@ public class StageSpawnBrickSystem : MonoBehaviour
         }
     }
 
+
+    
     public void ReSpawn(GameObject go)
     {
+        var spawnCount = 3;
+        var freePointCount = freeVerPoint.Count;
+        spawnCount = (freePointCount / 2);
+        
         var simplePoll = pollBricks[go];
-        if (simplePoll!=null)
+        for (int i = 0; i < spawnCount; i++)
         {
-            for (int i = 0; i < 7; i++)
+            {
+                if (TryUseRandomPointInMesh(out var v))
                 {
-                    if (TryUseRandomPointInMesh(out var v))
-                    {
-                        var newInstance = simplePoll.Instantiate(GetPosisionByKeyIndex(v.Key),Quaternion.identity);
-                        var brickStat= newInstance.GetComponent<BrickController>();
-                        brickStat.keyIndexInMesh = v.Key;
-                    }
+                    var newInstance = simplePoll.Instantiate(GetPosisionByKeyIndex(v.Key),Quaternion.identity);
+                    var brickStat= newInstance.GetComponent<BrickController>();
+                    brickStat.keyIndexInMesh = v.Key;
                 }
-            
+            }
         }
+        
     }
 
     private void UseKey(int key)

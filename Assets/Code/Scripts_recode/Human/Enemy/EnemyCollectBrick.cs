@@ -15,13 +15,16 @@ public class EnemyCollectBrick : MonoBehaviour
     [SerializeField] private int MaxNumBrick;
     private int TargetNumBrick;
     [SerializeField] private GameObject _detechBrick;
-    
-    public StageSpawnBrickSystem CurrentStage;
-
+    [SerializeField]private StageSpawnBrickSystem CurrentStage;
     private Vector3 stairPosision;
+   [SerializeField] private Vector3 targetStair;
 
-    //test
-   
+
+    private void Start()
+    {
+        targetStair = CurrentStage.GetRandomStair();
+    }
+
 
     public void AddTarget(Transform newBrick)
     {
@@ -61,9 +64,11 @@ public class EnemyCollectBrick : MonoBehaviour
     }
 
 
-    public void OnEnterNewStage()
+    public void OnEnterNewStage(StageSpawnBrickSystem stageSpawnBrickSystem)
     {
-        
+        CurrentStage = stageSpawnBrickSystem;
+        _stateController.State = (int) (EnemyState.CollectBrick);
+        targetStair = CurrentStage.GetRandomStair();
     }
 
     public void OnChangeState(int oldState,int newState)
@@ -83,7 +88,6 @@ public class EnemyCollectBrick : MonoBehaviour
                 break;
             case EnemyState.CollectBrick:
                 _detechBrick.gameObject.SetActive(true);
-
                 break;
             default:
                 break;
@@ -101,10 +105,6 @@ public class EnemyCollectBrick : MonoBehaviour
             {
                 if (CurrentBricks.Count > 0)
                 {
-
-                    // this can op(optimize)
-                    // find nearest
-                    
                     var nearest=CurrentBricks[0];
 
                     for (int i = 1; i < CurrentBricks.Count; i++)
@@ -144,12 +144,8 @@ public class EnemyCollectBrick : MonoBehaviour
 
                     if (_stackController.StackCount >= TargetNumBrick)
                     {
-                        //goto stair or attack the others // randomize is good choice
                         TargetNumBrick = 0;
                         _stateController.State = (int) EnemyState.GotoStair;
-                        /*
-                        canChangeStateNow = true;
-                    */
                     }
                     else
                     {
@@ -158,20 +154,14 @@ public class EnemyCollectBrick : MonoBehaviour
                 }
                 else
                 {
-                    // move to stari
                     if (_stackController.StackCount > 0)
                     {
-                        // go to stair
-                        _enemyMovement.MoveToTarget(CurrentStage.GetRandomStair());
+                        _enemyMovement.MoveToTarget(targetStair);
                         _stateController.State = (int) EnemyState.GotoStair;
                     }
                     else
                     {
-                        // to a random posisison
                         _enemyMovement.MoveToTarget(CurrentStage.GetRandomPosisionOnMesh());
-                        /*
-                        Debug.Log("ao");
-                    */
                     }
                 }
             }
@@ -182,9 +172,6 @@ public class EnemyCollectBrick : MonoBehaviour
     private void Update()
     {
         CollectBrick();
-        
-        //test
-
     }
 
 }

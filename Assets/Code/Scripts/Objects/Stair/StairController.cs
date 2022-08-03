@@ -8,9 +8,8 @@ using UnityEngine.AI;
 public class StairController : MonoBehaviour
 {
     [SerializeField] private Transform _stairRoot;
-
-    [SerializeField]private GameObject _stairStep;
-
+    [SerializeField] private GameObject _stairStep;
+    [SerializeField] private Transform finalWall;
     [SerializeField] private Vector3 _stairStepLocalOffset;
 
     [Header("Only For Generate")]
@@ -33,6 +32,9 @@ public class StairController : MonoBehaviour
             newStairStep.transform.SetParent(_stairRoot);
             newStairStep.transform.localPosition = _stairStep.transform.localPosition + (i + 1) * _stairStepLocalOffset;
         }
+        finalWall.SetParent(_stairRoot);
+        finalWall.transform.localPosition =
+            _stairStep.transform.localPosition + (_stairStepCount) * _stairStepLocalOffset;
     }
 
 

@@ -19,12 +19,22 @@ public class EnemyController : StateController
     private void Awake()
     {
         State = (int) EnemyState.Initial;
+    }
+    
+
+
+    private void OnEnable()
+    {
+        GameManager.Singleton.OnChangeState.AddListener(OnGameChangeState);
 
     }
 
-    private void Start()
+    private void OnDisable()
     {
-        GameManager.Singleton.OnChangeState.AddListener(OnGameChangeState);
+        if (GameManager.Singleton != null)
+        {
+            GameManager.Singleton.OnChangeState.RemoveListener(OnGameChangeState);
+        }
     }
 
 

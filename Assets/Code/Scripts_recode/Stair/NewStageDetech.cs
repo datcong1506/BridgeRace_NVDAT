@@ -13,8 +13,12 @@ public class NewStageDetech : MonoBehaviour
         if ((other.TryGetComponent<EnemyController>(out var controller)))
         {
             var collectBrick=other.GetComponent<EnemyCollectBrick>();
-            collectBrick.CurrentStage = Stage;
-            controller.State = (int) EnemyState.CollectBrick;
+            collectBrick.OnEnterNewStage(Stage);
+        }
+
+        if (other.TryGetComponent<PlayerIteract>( out var iteract))
+        {
+            
         }
     }
 

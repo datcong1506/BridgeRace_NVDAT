@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 
 [CreateAssetMenu(fileName = "GameData",menuName = "Data/GameData")]
@@ -38,7 +39,10 @@ public class GameData : ScripableSingletonInterface<GameData>
         {
             if (value != _currentlevel)
             {
-                _currentlevel = value;
+                if (value >= 0 && value < SceneManager.sceneCountInBuildSettings)
+                {
+                    _currentlevel = value;
+                }
             }
         }
     }

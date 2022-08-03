@@ -12,6 +12,14 @@ public class ObjectPooling
     private GameObject poolObject;
     private GameObject container;
 
+    public List<GameObject> Polls
+    {
+        get
+        {
+            return poolling;
+        }
+    }
+    
     public ObjectPooling(GameObject owner, GameObject pool, int initialNumber = 20)
     {
         if (owner == null || pool == null || initialNumber < 1) return;
@@ -110,8 +118,4 @@ public class ObjectPooling
             }
         }
     }
-
-
-
-
 }

@@ -12,13 +12,6 @@ public class PlayerIteract : MonoBehaviour
     {
         _stateController = GetComponent<StateController>();
     }
-
-    //take brick
-    public void Take(GameObject brick)
-    {
-        
-    }
-    
     
     public void OnHitStairStep(GameObject stairStep)
     {
@@ -51,7 +44,7 @@ public class PlayerIteract : MonoBehaviour
         }
         else
         {
-            _characterController.stepOffset = 0.3f;
+            _characterController.stepOffset = 0.5f;
         }
     }
 

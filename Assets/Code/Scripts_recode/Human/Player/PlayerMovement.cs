@@ -11,7 +11,6 @@ public class PlayerMovement : MonoBehaviour
     [Header("SmoothRotate")] [SerializeField]
     private float _smoothRoatateTime;
     private float _angularVelocity;
-    
     [Header("Gravity Simulate")] [SerializeField]
     private LayerMask _walkAbleLayer;
     [SerializeField][Range(0,1)] private float _radiusGroundCheck;
@@ -19,13 +18,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float _gravityValue = -9.81f;
     private Vector3 _fallVelocity;
     private bool isGround;
-
-
-    
     private StateController _stateController;
-
     [SerializeField]private float _speed;
-    
     public float CurrentSpeed { get; private set; }
     
     private void Start()
@@ -51,7 +45,6 @@ public class PlayerMovement : MonoBehaviour
             }
             
         }
-
         SimulateGravity();
     }
     private void MoveInDirec(Vector3 direc)
@@ -61,13 +54,14 @@ public class PlayerMovement : MonoBehaviour
         var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _angularVelocity,
             _smoothRoatateTime);
         transform.rotation=Quaternion.Euler(0,angle,0);
-         CurrentSpeed = Mathf.Lerp(Vector3.Magnitude(_characterController.velocity),_speed,0.2f);
+        transform.rotation=Quaternion.Euler(0,angle,0);
+         CurrentSpeed = Mathf.Lerp(CurrentSpeed,_speed,0.2f);
         _characterController.Move(direc * CurrentSpeed * Time.deltaTime);
     }
     private void StopMove()
     {
         
-        CurrentSpeed = Mathf.Lerp(0,Vector3.Magnitude(_characterController.velocity),0.8f);
+        CurrentSpeed = Mathf.Lerp(0,CurrentSpeed,0.8f);
         _characterController.Move(_characterController.velocity.normalized * CurrentSpeed * Time.deltaTime);
     }
     private void SimulateGravity()
