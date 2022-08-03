@@ -44,7 +44,7 @@ public class PlayerIteract : MonoBehaviour
         }
         else
         {
-            _characterController.stepOffset = 0.5f;
+            _characterController.stepOffset = 0.35f;
         }
     }
 

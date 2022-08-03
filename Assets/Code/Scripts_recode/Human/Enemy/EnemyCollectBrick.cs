@@ -17,7 +17,7 @@ public class EnemyCollectBrick : MonoBehaviour
     [SerializeField] private GameObject _detechBrick;
     [SerializeField]private StageSpawnBrickSystem CurrentStage;
     private Vector3 stairPosision;
-   [SerializeField] private Vector3 targetStair;
+    [SerializeField] private Vector3 targetStair;
 
 
     private void Start()
@@ -79,8 +79,7 @@ public class EnemyCollectBrick : MonoBehaviour
         {
             case EnemyState.GotoStair:
                 CurrentBricks.Clear();
-                var target=CurrentStage.GetRandomStair();
-                _enemyMovement.MoveToTarget(target);
+                _enemyMovement.MoveToTarget(targetStair);
                 _detechBrick.gameObject.SetActive(false);
                 break;
             case EnemyState.Fall:
@@ -134,8 +133,6 @@ public class EnemyCollectBrick : MonoBehaviour
                         }
                     }
                     
-                    
-                    
                     if (TargetNumBrick <= 0)
                     {
 
@@ -156,7 +153,6 @@ public class EnemyCollectBrick : MonoBehaviour
                 {
                     if (_stackController.StackCount > 0)
                     {
-                        _enemyMovement.MoveToTarget(targetStair);
                         _stateController.State = (int) EnemyState.GotoStair;
                     }
                     else
