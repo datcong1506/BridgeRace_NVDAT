@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Level/Scenes/CreateScene/Kong Island.unity
+    path: Assets/Level/Scenes/Kong Island.unity
     guid: 72c19fbb8a86976439ccaf0ab45ae388
   - enabled: 1
-    path: Assets/Level/Scenes/CreateScene/Phuquoc.unity
+    path: Assets/Level/Scenes/Phuquoc.unity
     guid: 4114837e61eef4542b66ceb89a9633dc
   - enabled: 1
-    path: Assets/Level/Scenes/CreateScene/Hawaiii.unity
+    path: Assets/Level/Scenes/Hawaiii.unity
     guid: c3eeecfa1401c9645b37e43a76507bbc
   m_configObjects: {}

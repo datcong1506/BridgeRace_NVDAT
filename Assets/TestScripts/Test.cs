@@ -2,13 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.AI;
 public class Test : MonoBehaviour
 {
-    public float value;
-    [ContextMenu("timescale")]
-    public void SetTimeScale()
-    {
-        Time.timeScale = value;
+    private void Start(){
+        NavMesh.RemoveAllNavMeshData();
     }
 }
